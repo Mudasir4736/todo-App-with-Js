@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./style.css">
+    <title>Document</title>
+</head>
+<body>
+
+<div class="header">
+    <div>
+        <span class="span1">Task</span>
+        <span class="span2">List</span>
+    </div>
+<div>
+    <button onclick="showAddCardPop()" class="header_button">+</button>
+    <span class="span3">Add Item</span>
+</div>
+
+</div>
+<h1 id="mainwindow">No Items In the Todo List</h1>
+    
+
+<div class="container1">
+    <div id="popup1">
+        <h3 class="pop1_heading">Add New List</h3>
+        <input type="text" id="card-input-text" placeholder="Add New List">
+        <div class="pop1_button">
+            <button onclick=" handleAddCard()" >Add</button>
+            <button onclick="closeAddCardPopup()">close</button>
+        </div>
+    
+       </div>
+       
+
+</div>
+   
+<div class="container3">
+    <div id="popup2">
+        <h3>Add New Task</h3>
+        <input type="text" id="card-content-input">
+        <div class="pop2_button">
+            <button onclick="addContentToCard()" >Add</button>
+            <button onclick="closeAddCardPopup()">close</button>
+        </div>
+        
+    
+    </div>
+</div>
+
+   
+
+<div id="card-container">
+
+</div>
+
+
+
+   <script src="./index.js"></script>
+</body>
+</html>
