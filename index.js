@@ -1,87 +1,224 @@
-let data = [];
+const addbtn1 = document.querySelector('.button1');
+const addbtn2 = document.querySelector('.add1');
+const flexcontainer = document.querySelector('.container');
+const mainBody = document.querySelector('body')
+
+
+const displayJustCard = document.querySelector('.displayJustCard');
+
+let newList = document.querySelector('.addlist') ;
+
+
+
+// created an array 
+data = [];
 let cardId;
 
-// show Add card popup
-function showAddCardPop() {
-  const popup1 = document.getElementById("popup1");
-  popup1.style.display = "block";
-  const mainwindow =document.getElementById('mainwindow')
-  mainwindow.style.display="none"
-}
-// close Add card popup
-function closeAddCardPopup() {
-  const popup1 = document.getElementById("popup1");
-  popup1.style.display = "none";
+// to make 1st popup visible
+function addNewItem() { 
+    
+let newList = document.querySelector('.addlist') ;   
+newList.style.display = 'block' ;
 }
 
-function handleAddCard() {
-  const cardText = document.getElementById("card-input-text").value;
-  console.log(cardText)
-  const card = {
-    id: new Date().getTime().toString(),
-    cardTitle: cardText,
-  };
-  if (cardText) {
-    data.push(card);
-    renderCards();
-  } else {
-    alert("Please add card Name");
+// to close the first popup
+function closeIt() {
+    let  newList = document.querySelector('.addlist');
+    newList.style.display = 'none';
+ }
+
+// to add flex card
+ function addFlex() {
+    newList.style.display = 'none';  
+    const flexHead = document.getElementById("myInput").value;
+
+    const item = {
+        id : new Date().getTime().toString(),
+        title : flexHead,
+        content :[]
+    }
+
+    if(flexHead){
+        data.push(item);
+        addCard();
+    }
+    else{
+        alert("Enter the title")
+    }
+
+    document.getElementById("myInput").value = ""; 
+
+
+const cardHeading = document.querySelector('.cardHeading');
+cardHeading.innerHTML = "";
+
+    const navBar = document.querySelector('.head1')
+    navBar.style.display = 'block'
+
+    const backButton = document.querySelector('.back')
+    backButton.style.display = 'none'
+   
+
+}
+ 
+ // to delete the flex card
+ function deleteIt(id) {
+    const cardId = `${id}`;
+    const card = document.getElementById(cardId);
+    card.parentNode.removeChild(card);
+    data = data.filter((item) =>item.id!==id)
+   
+    
+}
+
+
+// made a second popup
+function addCardList(id){
+    let newText = document.querySelector('.addlist2') ;
+    newText.style.display = 'block' 
+    cardId = id;
+}
+
+
+// To close the second popup
+function closeText() {
+    let  newList = document.querySelector('.addlist2');
+    newList.style.display = 'none'; 
+   
+ }
+
+ function renderContents(){
+    for (let i = 0; i < data.length; i++) {
+       let ulelement = document.getElementById(`content_list_${data[i].id}`);
+       let child=""
+       for(let j=0;j<data[i].content.length;j++){
+           let content = data[i].content[j];
+           child += `<li class = "content ${content.done? "checked":""}" id="content_${content.id}" onclick ="doneTask(${content.id}, ${data[i].id})">${content.contentText}</li>`
+           console.log(data[i]) 
+       }
+       ulelement.innerHTML = child;
+       console.log(data)
+    }  
+ }
+
+
+
+// adding viva list
+function addCard(){
+   
+    const cardcontainer = document.querySelector('.container1')
+    let child = "";
+    for (let i = 0; i < data.length; i++) {
+    //   console.log("data[i]:", data[i]);
+      child += `<div id="${data[i].id}" class="card">
+      <div value="${data[i].title}" onclick ="displayMyCard(${data[i].id}, this.getAttribute('value'))" class="ftext1">${data[i].title}</div>
+      <hr>
+      <div class="task1">
+          <ul id="content_list_${data[i].id}">
+          </ul>
+      </div>    
+          <div class = "btnspace">
+          <button value = ${data[i].id} onclick ="deleteIt(this.value)" class = "delb"><i class="fa fa-trash" aria-hidden="true"></i></button>
+          <button value = ${data[i].id} onclick ="addCardList(this.value)"  class = "plusbutn"><i class="fa fa-plus" aria-hidden="true"></i></button>
+          </div>
+          </div>`;
+    }
+    cardcontainer.innerHTML = child;
+    renderContents();
+    console.log(data);
+
   }
-  document.getElementById("card-input-text").value = "";
-  closeAddCardPopup();
+
+
+
+    function addContenttext() {
+        const contentListId = `content_list_${cardId}`;
+        // console.log(cardId);
+        const Ul = document.getElementById(contentListId);
+        const contentText = document.getElementById('myInput1').value;
+        if (!contentText) {
+            alert("Please add task name");
+        } else {         
+          document.getElementById('myInput1').value = "";
+          const liNode = document.createElement("li");
+          
+          liNode.innerHTML = contentText;
+          liNode.className = "content";
+        
+          Ul.appendChild(liNode);
+          closeText()
+          for(let i=0; i< data.length;i++){
+            if(data[i].id==cardId){
+                let content = {
+                    id : new Date().getTime().toString(),
+                    contentText: contentText,
+                    done: false
+                }
+                data[i].content.push(content)
+                // console.log(data[i].content);
+            }
+          }
+          renderContents();
+        }
+      }
+
+      function doneTask(taskId, cardId) {
+        const contentId = `content_${taskId}`
+        const liElement = document.getElementById(contentId);
+        liElement.classList.toggle("checked");
+
+        for (let i=0;i<data.length;i++){
+            if (data[i].id ==cardId){
+                for (let j=0;j<data[i].content.length;j++){
+                    const content = data[i].content[j];
+                    if(content.id == taskId){
+                        data[i].content[j].done = !data[i].content[j].done ;
+                        // data[i].content[j].done = true;
+                    }
+                }
+            }
+        }
+       
+      }
+ 
+  
+
+
+
+function displayMyCard(id, value){
+   
+    addbtn1.style.display = "block";
+  
+    const cardHeading = document.querySelector('.cardHeading');
+    cardHeading.innerHTML = value;
+
+    const cards = document.querySelectorAll('.card')
+    cards.forEach(allcards => {
+        allcards.style.display ='none';
+    });
+    const cardToShow = document.getElementById(id);
+    cardToShow.style.display = 'block'
+
+    const navBar = document.querySelector('.head1')
+    navBar.style.display = 'none'
+
+    const backButton = document.querySelector('.back')
+    backButton.style.display = 'block'
 }
 
-function renderCards() {
-  const cardcontainer = document.getElementById("card-container");
-  let child = "";
-  for (let i = 0; i < data.length; i++) {
-    console.log("data[i]:", data[i]);
-    child += `<div id="card_${data[i].id}" class="card">
-        <p class="p2">${data[i].cardTitle}</p>
-        <hr>
-        <ul id="content_list_${data[i].id}">
 
-        </ul>
-        <div class="container2">
-        <Button onclick="deleteCard(${data[i].id})" class="delete">D</Button>
-        <Button onclick="showAddContentToCardPopup(${data[i].id})" class="add">+</Button>
-        </div>
-        </div>`;
-  }
-  cardcontainer.innerHTML = child;
+function openFirstPage(){
+    const cards = document.querySelectorAll('.card');
+    const cardHeading = document.querySelector('.cardHeading');
+   cardHeading.innerHTML = "";
+    cards.forEach(allcards => {
+        allcards.style.display ='block';
+    });
+    const navBar = document.querySelector('.head1')
+    navBar.style.display = 'block'
+
+    const backButton = document.querySelector('.back')
+    backButton.style.display = 'none'
+
 }
 
-function deleteCard(id) {
-  const cardcontainer = document.getElementById("card-container");
-  const cardId = `card_${id}`;
-  const card = document.getElementById(cardId);
-  //remove child from parent node
-  card.parentNode.removeChild(card);
-  data = data.filter((item) => item.id !== cardId);
-}
-
-function showAddContentToCardPopup(id) {
-  const popup2 = document.getElementById("popup2");
-  popup2.style.display = "block";
-  cardId = id;
-}
-
-function removeAddContentToCardPopup() {
-  const popup2 = document.getElementById("popup2");
-  popup2.style.display = "none";
-}
-
-function addContentToCard() {
-  const contentListId = `content_list_${cardId}`;
-  const Ul = document.getElementById(contentListId);
-  const contentText = document.getElementById("card-content-input").value;
-  if (contentText) {
-    document.getElementById("card-content-input").value = "";
-    const liNode = document.createElement("li");
-    liNode.innerHTML = contentText;
-    Ul.appendChild(liNode);
-    removeAddContentToCardPopup();
-  } else {
-    alert("Please add task name");
-  }
-}
